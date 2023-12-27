@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Scrabble Words</title>
+</head>
+<body>
+
+  <div class="container mt-3">
+    <div class="row">
+      <!-- Left Column: Search Box and Results -->
+      <div class="col-md-4">
+        <h2>Word Search</h2>
+        <input type="text" class="form-control mb-3" id="searchInput" placeholder="Search..." oninput="searchList()">
+        <ul id="resultList" class="list-group"></ul>
+      </div>
+
+      <!-- Right Column: Two Letter Words -->
+      <div class="col-md-8">
+        <h2>Two Letter Words</h2>
+        <!-- Add custom style to prevent stacking -->
+        <div id="twoLettersList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="lists.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <!-- Add Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  <script>
+    // Function to populate the list based on the search input
+    function searchList() {
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      const resultList = document.getElementById('resultList');
+      const twoLettersList = document.getElementById('twoLettersList');
+
+      resultList.innerHTML = ''; // Clear previous results
+      twoLettersList.innerHTML = ''; // Clear previous two_letters list
+
+      // Check if the search input has at least two characters
+      if (searchInput.length >= 2) {
+        // Uncomment the desired matching criteria
+        //const filteredData = all.filter(item => item.toLowerCase().includes(searchInput.toLowerCase()));
+        //const filteredData = all.filter(item => item.toLowerCase().startsWith(searchInput));
+        const filteredData = all.filter(item => item.toLowerCase() === searchInput.toLowerCase());
+
+        // Populate the result list
+        filteredData.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'list-item list-group-item';
+          li.textContent = item;
+          resultList.appendChild(li);
+        });
+      }
+
+      // Group two_letters by starting letter
+      const groupedByLetter = groupByStartingLetter(two_letters);
+
+      // Populate the two_letters list with rows for each starting letter
+      for (const startingLetter in groupedByLetter) {
+        const words = groupedByLetter[startingLetter];
+        words.forEach(word => {
+          const span = document.createElement('span');
+          span.className = 'list-item';
+          span.textContent = word;
+          twoLettersList.appendChild(span);
+        });
+      }
+    }
+
+    // Initial population of the list
+    searchList();
+
+    // Function to group words by starting letter
+    function groupByStartingLetter(words) {
+      return words.reduce((result, word) => {
+        const startingLetter = word.charAt(0).toLowerCase();
+        if (!result[startingLetter]) {
+          result[startingLetter] = [];
+        }
+        result[startingLetter].push(word);
+        return result;
+      }, {});
+    }
+  </script>
+
+</body>
+</html>
